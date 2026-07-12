@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher Dashboard</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="dashboard-page">
+  <header class="topbar">
+    <div>
+      <h1>Teacher Dashboard</h1>
+      <p class="muted" id="teacherUserName"></p>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn btn-secondary" id="teacherLogout">Logout</button>
+    </div>
+  </header>
+
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <button class="nav-link active" data-section="classes">My Classes</button>
+      <button class="nav-link" data-section="mark">Mark Attendance</button>
+      <button class="nav-link" data-section="view">View Attendance</button>
+      <button class="nav-link" data-section="results">Results</button>
+      <button class="nav-link" data-section="notices">Notices</button>
+      <button class="nav-link" data-section="timetable">Timetable</button>
+      <button class="nav-link" data-section="security">Security</button>
+    </aside>
+
+    <main class="main-content">
+      <section class="dashboard-overview teacher-overview">
+        <article class="overview-card">
+          <span>Assigned Classes</span>
+          <strong id="teacherOverviewClasses">0</strong>
+        </article>
+        <article class="overview-card">
+          <span>Students in View</span>
+          <strong id="teacherOverviewStudents">0</strong>
+        </article>
+        <article class="overview-card">
+          <span>Selected Date</span>
+          <strong id="teacherOverviewDate">Today</strong>
+        </article>
+      </section>
+
+      <section id="classesSection" class="content-section active">
+        <div class="section-head">
+          <h2>My Classes</h2>
+          <p class="muted">Classes assigned to your account in MongoDB.</p>
+        </div>
+        <div id="teacherClassesList" class="card-grid"></div>
+      </section>
+
+      <section id="markSection" class="content-section">
+        <div class="section-head">
+          <h2>Mark Attendance</h2>
+          <p class="muted">Choose a class, load the roster, then mark each student.</p>
+        </div>
+        <div class="panel">
+          <div class="filter-row">
+            <select id="teacherClassSelect">
+              <option value="">Select class</option>
+            </select>
+            <input type="date" id="attendanceDate">
+            <button class="btn btn-primary" id="loadStudentsBtn">Load Students</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div id="attendanceMarkingArea"></div>
+        </div>
+      </section>
+
+      <section id="viewSection" class="content-section">
+        <div class="section-head">
+          <h2>View Attendance</h2>
+          <p class="muted">Review a class’s attendance status for any day.</p>
+        </div>
+        <div class="panel">
+          <div class="filter-row">
+            <select id="viewClassSelect">
+              <option value="">Select class</option>
+            </select>
+            <input type="date" id="viewDateSelect">
+            <button class="btn btn-primary" id="viewAttendanceBtnTeacher">View</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Student ID</th>
+                  <th>Name</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="teacherAttendanceTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="resultsSection" class="content-section">
+        <div class="section-head">
+          <h2>Results</h2>
+          <p class="muted">Load an exam, enter subject marks, and save student report cards.</p>
+        </div>
+        <div class="panel">
+          <div class="filter-row">
+            <select id="teacherResultClassSelect">
+              <option value="">Select class</option>
+            </select>
+            <select id="teacherResultExamSelect">
+              <option value="">Select exam</option>
+            </select>
+            <button class="btn btn-primary" id="loadTeacherResultBtn">Load Result Sheet</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead id="teacherResultTableHead"></thead>
+              <tbody id="teacherResultTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="noticesSection" class="content-section">
+        <div class="section-head">
+          <h2>Notices</h2>
+          <p class="muted">School notices and alerts.</p>
+        </div>
+        <div class="panel">
+          <div id="teacherNotifications" class="stack-list"></div>
+        </div>
+        <div class="panel">
+          <div id="teacherNotices" class="stack-list"></div>
+        </div>
+      </section>
+
+      <section id="timetableSection" class="content-section">
+        <div class="section-head">
+          <h2>Timetable</h2>
+          <p class="muted">Your class schedule for the selected year and term.</p>
+        </div>
+        <div class="panel">
+          <div class="filter-row">
+            <select id="teacherTimetableClassSelect">
+              <option value="">Select class</option>
+            </select>
+            <input type="text" id="teacherTimetableYear" placeholder="Academic Year">
+            <select id="teacherTimetableTerm">
+              <option value="">All Terms</option>
+              <option value="Term 1">Term 1</option>
+              <option value="Term 2">Term 2</option>
+              <option value="Term 3">Term 3</option>
+            </select>
+            <button class="btn btn-primary" id="loadTeacherTimetableBtn">Load</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Day</th><th>Period</th><th>Subject</th><th>Teacher</th>
+                </tr>
+              </thead>
+              <tbody id="teacherTimetableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="securitySection" class="content-section">
+        <div class="section-head">
+          <h2>Security</h2>
+          <p class="muted">Change your password from the dashboard.</p>
+        </div>
+        <div class="panel">
+          <form id="teacherChangePasswordForm" class="form-grid">
+            <label>Current Password <input type="password" id="teacherCurrentPassword" required></label>
+            <label>New Password <input type="password" id="teacherNewPassword" required></label>
+            <div class="form-actions"><button type="submit" class="btn btn-primary">Update Password</button></div>
+          </form>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/teacher.js"></script>
+</body>
+</html>

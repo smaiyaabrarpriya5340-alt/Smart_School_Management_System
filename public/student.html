@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="dashboard-page">
+  <header class="topbar">
+    <div>
+      <h1>Student Dashboard</h1>
+      <p class="muted" id="studentUserName"></p>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn btn-secondary" id="studentLogout">Logout</button>
+    </div>
+  </header>
+
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <button class="nav-link active" data-section="profile">My Profile</button>
+      <button class="nav-link" data-section="attendance">My Attendance</button>
+      <button class="nav-link" data-section="results">Results</button>
+      <button class="nav-link" data-section="fees">Fees</button>
+      <button class="nav-link" data-section="notices">Notices</button>
+      <button class="nav-link" data-section="timetable">Timetable</button>
+      <button class="nav-link" data-section="security">Security</button>
+    </aside>
+
+    <main class="main-content">
+      <section class="dashboard-overview student-overview">
+        <article class="overview-card">
+          <span>Present Days</span>
+          <strong id="studentOverviewPresent">0</strong>
+        </article>
+        <article class="overview-card">
+          <span>Absent Days</span>
+          <strong id="studentOverviewAbsent">0</strong>
+        </article>
+        <article class="overview-card">
+          <span>Attendance Rate</span>
+          <strong id="studentOverviewRate">0%</strong>
+        </article>
+      </section>
+
+      <section id="profileSection" class="content-section active">
+        <div class="section-head">
+          <h2>My Profile</h2>
+          <p class="muted">Your registration details are stored in MongoDB Atlas.</p>
+        </div>
+        <div class="panel profile-panel">
+          <p><strong>Student ID:</strong> <span id="profileStudentId"></span></p>
+          <p><strong>Name:</strong> <span id="profileName"></span></p>
+          <p><strong>Email:</strong> <span id="profileEmail"></span></p>
+          <p><strong>Class:</strong> <span id="profileClass"></span></p>
+        </div>
+      </section>
+
+      <section id="attendanceSection" class="content-section">
+        <div class="section-head">
+          <h2>My Attendance</h2>
+          <p class="muted">Monthly attendance history and summary.</p>
+        </div>
+        <div class="panel">
+          <div class="filter-row">
+            <input type="month" id="studentMonthFilter">
+            <button class="btn btn-primary" id="viewMyAttendanceBtn">View</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="studentAttendanceTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="stats-grid narrow">
+          <article class="stat-card">
+            <h3>Total Present</h3>
+            <p id="totalPresent">0</p>
+          </article>
+          <article class="stat-card">
+            <h3>Total Absent</h3>
+            <p id="totalAbsent">0</p>
+          </article>
+          <article class="stat-card">
+            <h3>Attendance Percentage</h3>
+            <p id="attendancePercentage">0%</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="resultsSection" class="content-section">
+        <div class="section-head">
+          <h2>Results</h2>
+          <p class="muted">View your published exam results and download a report card.</p>
+        </div>
+        <div class="panel">
+          <div class="filter-row">
+            <select id="studentResultExamSelect">
+              <option value="">Select exam</option>
+            </select>
+            <button class="btn btn-primary" id="loadStudentResultBtn">View Result</button>
+            <button class="btn btn-secondary" id="downloadStudentResultBtn">Download PDF</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div id="studentResultSummary" class="stats-grid narrow"></div>
+        </div>
+        <div class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Subject</th>
+                  <th>Obtained</th>
+                  <th>Full Mark</th>
+                </tr>
+              </thead>
+              <tbody id="studentResultTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="feesSection" class="content-section">
+        <div class="section-head">
+          <h2>Fees</h2>
+          <p class="muted">Your school fee records and payment status.</p>
+        </div>
+        <div class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Title</th><th>Amount</th><th>Status</th><th>Due Date</th></tr></thead>
+              <tbody id="studentFeesBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="noticesSection" class="content-section">
+        <div class="section-head">
+          <h2>Notices</h2>
+          <p class="muted">School notices and alerts for students.</p>
+        </div>
+        <div class="panel">
+          <div id="studentNotifications" class="stack-list"></div>
+        </div>
+        <div class="panel">
+          <div id="studentNotices" class="stack-list"></div>
+        </div>
+      </section>
+
+      <section id="timetableSection" class="content-section">
+        <div class="section-head">
+          <h2>Timetable</h2>
+          <p class="muted">Your class schedule for the selected term.</p>
+        </div>
+        <div class="panel">
+          <div class="filter-row">
+            <input type="text" id="studentTimetableYear" placeholder="Academic Year">
+            <select id="studentTimetableTerm">
+              <option value="">All Terms</option>
+              <option value="Term 1">Term 1</option>
+              <option value="Term 2">Term 2</option>
+              <option value="Term 3">Term 3</option>
+            </select>
+            <button class="btn btn-primary" id="loadStudentTimetableBtn">Load</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Day</th><th>Period</th><th>Subject</th><th>Teacher</th>
+                </tr>
+              </thead>
+              <tbody id="studentTimetableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="securitySection" class="content-section">
+        <div class="section-head">
+          <h2>Security</h2>
+          <p class="muted">Change your password directly from the student dashboard.</p>
+        </div>
+        <div class="panel">
+          <form id="studentChangePasswordForm" class="form-grid">
+            <label>Current Password <input type="password" id="studentCurrentPassword" required></label>
+            <label>New Password <input type="password" id="studentNewPassword" required></label>
+            <div class="form-actions"><button type="submit" class="btn btn-primary">Update Password</button></div>
+          </form>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/student.js"></script>
+</body>
+</html>

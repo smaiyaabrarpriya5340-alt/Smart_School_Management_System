@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="dashboard-page">
+  <header class="topbar">
+    <div>
+      <h1>Admin Dashboard</h1>
+      <p class="muted" id="adminUserName"></p>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn btn-secondary" id="adminLogout">Logout</button>
+    </div>
+  </header>
+
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <button class="nav-link active" data-section="students">Students</button>
+      <button class="nav-link" data-section="teachers">Teachers</button>
+      <button class="nav-link" data-section="attendance">Attendance</button>
+      <button class="nav-link" data-section="reports">Reports</button>
+      <button class="nav-link" data-section="results">Results</button>
+      <button class="nav-link" data-section="notices">Notices</button>
+      <button class="nav-link" data-section="fees">Fees</button>
+      <button class="nav-link" data-section="parents">Parents</button>
+      <button class="nav-link" data-section="audit">Audit</button>
+      <button class="nav-link" data-section="timetable">Timetable</button>
+      <button class="nav-link" data-section="analytics">Analytics</button>
+      <button class="nav-link" data-section="security">Security</button>
+    </aside>
+
+    <main class="main-content">
+      <section class="dashboard-overview">
+        <article class="overview-card"><span>Total Students</span><strong id="overviewStudents">0</strong></article>
+        <article class="overview-card"><span>Total Teachers</span><strong id="overviewTeachers">0</strong></article>
+        <article class="overview-card"><span>Today's Attendance</span><strong id="overviewAttendance">0%</strong></article>
+        <article class="overview-card"><span>Today's Marked</span><strong id="overviewMarked">0</strong></article>
+      </section>
+
+      <section id="studentsSection" class="content-section active">
+        <div class="section-head">
+          <h2>Student Management</h2>
+          <p class="muted">Create, search, sort, and edit student records stored in MongoDB Atlas.</p>
+        </div>
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Add Student</h3>
+            <span class="panel-subtitle">The form writes to the live database.</span>
+          </div>
+          <form id="studentForm" class="form-grid">
+            <label>Full Name <input type="text" id="studentName" required></label>
+            <label>Email <input type="email" id="studentEmail" required></label>
+            <label>Password <input type="password" id="studentPassword" required></label>
+            <label>Student ID <input type="text" id="studentId" required></label>
+            <label>Class <select id="studentClass" required><option value="">Loading classes...</option></select></label>
+            <label>Section
+              <select id="studentSection" required>
+                <option value="">Select section</option>
+                <option value="A">Section A</option>
+                <option value="B">Section B</option>
+              </select>
+            </label>
+            <label>Academic Year <input type="text" id="studentAcademicYear" placeholder="2026"></label>
+            <label>Grade Level <input type="text" id="studentGradeLevel" placeholder="Grade 10"></label>
+            <div class="form-actions"><button type="submit" class="btn btn-primary">Save Student</button></div>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Students</h3>
+            <span class="panel-subtitle">Use the search box and sort control to inspect records quickly.</span>
+          </div>
+          <div class="filter-row">
+            <input id="studentSearch" type="search" placeholder="Search students">
+            <select id="studentSortBy">
+              <option value="createdAt">Newest</option>
+              <option value="name">Name</option>
+              <option value="studentId">Student ID</option>
+              <option value="className">Class</option>
+            </select>
+            <select id="studentSortOrder">
+              <option value="desc">Descending</option>
+              <option value="asc">Ascending</option>
+            </select>
+            <button class="btn btn-secondary" id="studentFilterBtn">Filter</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th><th>Name</th><th>Email</th><th>Class</th><th>Section</th><th>Year</th><th>Grade</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="studentsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="teachersSection" class="content-section">
+        <div class="section-head">
+          <h2>Teacher Management</h2>
+          <p class="muted">Assign classes and subjects as structured rows, not free text.</p>
+        </div>
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Add Teacher</h3>
+            <span class="panel-subtitle">Each class assignment is saved as a separate MongoDB object.</span>
+          </div>
+          <form id="teacherForm" class="form-grid">
+            <label>Full Name <input type="text" id="teacherName" required></label>
+            <label>Email <input type="email" id="teacherEmail" required></label>
+            <label>Password <input type="password" id="teacherPassword" required></label>
+            <label>Teacher ID <input type="text" id="teacherId" required></label>
+            <label>Subject <input type="text" id="teacherSubject" required></label>
+            <label>Academic Year <input type="text" id="teacherAcademicYear" placeholder="2026"></label>
+            <div class="full-width">
+              <div class="section-head inline">
+                <h3>Class Assignments</h3>
+                <button type="button" class="btn btn-secondary" id="addTeacherClassBtn">Add Class</button>
+              </div>
+              <div id="teacherClassAssignments" class="assignment-list"></div>
+              <p class="muted helper-text">Choose a class and subject for each assignment row.</p>
+            </div>
+            <div class="form-actions"><button type="submit" class="btn btn-primary">Save Teacher</button></div>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Teachers</h3>
+            <span class="panel-subtitle">Search by name, subject, or teacher ID.</span>
+          </div>
+          <div class="filter-row">
+            <input id="teacherSearch" type="search" placeholder="Search teachers">
+            <select id="teacherSortBy">
+              <option value="createdAt">Newest</option>
+              <option value="name">Name</option>
+              <option value="teacherId">Teacher ID</option>
+              <option value="subject">Subject</option>
+            </select>
+            <select id="teacherSortOrder">
+              <option value="desc">Descending</option>
+              <option value="asc">Ascending</option>
+            </select>
+            <button class="btn btn-secondary" id="teacherFilterBtn">Filter</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th><th>Name</th><th>Email</th><th>Subject</th><th>Classes</th><th>Year</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="teachersTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="attendanceSection" class="content-section">
+        <div class="section-head">
+          <h2>Attendance</h2>
+          <p class="muted">Filter by class, section, date range, year, term, and status.</p>
+        </div>
+        <div class="panel">
+          <div class="filter-row">
+            <select id="attendanceClassFilter"><option value="">All Classes</option></select>
+            <select id="attendanceSectionFilter">
+              <option value="">All Sections</option>
+              <option value="A">Section A</option>
+              <option value="B">Section B</option>
+            </select>
+            <select id="attendanceYearFilter"><option value="">All Years</option></select>
+            <select id="attendanceTermFilter">
+              <option value="">All Terms</option>
+              <option value="Term 1">Term 1</option>
+              <option value="Term 2">Term 2</option>
+              <option value="Term 3">Term 3</option>
+            </select>
+            <select id="attendanceStatusFilter">
+              <option value="">All Statuses</option>
+              <option value="Present">Present</option>
+              <option value="Absent">Absent</option>
+            </select>
+            <input type="date" id="attendanceDateFromFilter">
+            <input type="date" id="attendanceDateToFilter">
+            <input type="search" id="attendanceSearchFilter" placeholder="Search student">
+            <select id="attendanceSortBy">
+              <option value="date">Date</option>
+              <option value="studentName">Student</option>
+              <option value="className">Class</option>
+              <option value="status">Status</option>
+            </select>
+            <select id="attendanceSortOrder">
+              <option value="desc">Descending</option>
+              <option value="asc">Ascending</option>
+            </select>
+            <button class="btn btn-primary" id="viewAttendanceBtn">View Attendance</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Student ID</th><th>Name</th><th>Class</th><th>Section</th><th>Year</th><th>Term</th><th>Date</th><th>Status</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="attendanceTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="reportsSection" class="content-section">
+        <div class="section-head">
+          <h2>Reports</h2>
+          <p class="muted">Build monthly, student-wise, or class-wise reports and export them.</p>
+        </div>
+        <div class="panel">
+          <div class="filter-row">
+            <input type="month" id="reportMonthFilter">
+            <select id="reportClassFilter"><option value="">All Classes</option></select>
+            <select id="reportSectionFilter">
+              <option value="">All Sections</option>
+              <option value="A">Section A</option>
+              <option value="B">Section B</option>
+            </select>
+            <input type="text" id="reportStudentFilter" placeholder="Student ID">
+            <input type="text" id="reportYearFilter" placeholder="Academic Year">
+            <select id="reportTermFilter">
+              <option value="">All Terms</option>
+              <option value="Term 1">Term 1</option>
+              <option value="Term 2">Term 2</option>
+              <option value="Term 3">Term 3</option>
+            </select>
+            <select id="reportTypeFilter">
+              <option value="monthly">Monthly</option>
+              <option value="student">Student</option>
+              <option value="class">Class</option>
+            </select>
+            <button class="btn btn-primary" id="buildReportBtn">Build Report</button>
+            <button class="btn btn-secondary" id="exportCsvBtn">Export CSV</button>
+            <button class="btn btn-secondary" id="exportPdfBtn">Export PDF</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Report Summary</h3>
+            <span class="panel-subtitle" id="reportSummaryText">No report built yet.</span>
+          </div>
+          <div class="stats-grid">
+            <article class="stat-card"><h3>Present</h3><p id="reportPresent">0</p></article>
+            <article class="stat-card"><h3>Absent</h3><p id="reportAbsent">0</p></article>
+            <article class="stat-card"><h3>Rate</h3><p id="reportRate">0%</p></article>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Student ID</th><th>Name</th><th>Class</th><th>Section</th><th>Year</th><th>Term</th><th>Date</th><th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="reportTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="resultsSection" class="content-section">
+        <div class="section-head">
+          <h2>Exams & Results</h2>
+          <p class="muted">Create exams, publish results, and generate individual report cards.</p>
+        </div>
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Create Exam</h3>
+            <span class="panel-subtitle">Subjects can be entered as a comma-separated list.</span>
+          </div>
+          <form id="examForm" class="form-grid">
+            <label>Exam Name <input type="text" id="examName" required></label>
+            <label>Class <select id="examClassName" required><option value="">Select class</option></select></label>
+            <label>Section
+              <select id="examSection">
+                <option value="">Any</option>
+                <option value="A">Section A</option>
+                <option value="B">Section B</option>
+              </select>
+            </label>
+            <label>Academic Year <input type="text" id="examAcademicYear" placeholder="2026"></label>
+            <label>Term
+              <select id="examTerm">
+                <option value="Term 1">Term 1</option>
+                <option value="Term 2">Term 2</option>
+                <option value="Term 3">Term 3</option>
+              </select>
+            </label>
+            <label>Subjects <input type="text" id="examSubjects" placeholder="Math, English, Science" required></label>
+            <label>Published <input type="checkbox" id="examPublished"></label>
+            <label>Locked <input type="checkbox" id="examLocked"></label>
+            <div class="form-actions"><button type="submit" class="btn btn-primary">Save Exam</button></div>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Exam List</h3>
+            <span class="panel-subtitle">Use the actions to publish, lock, or remove an exam.</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Exam</th><th>Class</th><th>Section</th><th>Year</th><th>Term</th><th>Subjects</th><th>Status</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="examTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Individual Marksheet</h3>
+            <span class="panel-subtitle">Search by student ID and exam.</span>
+          </div>
+          <div class="filter-row">
+            <input type="text" id="resultStudentId" placeholder="Student ID">
+            <select id="resultExamSelect">
+              <option value="">Select exam</option>
+            </select>
+            <button class="btn btn-primary" id="loadStudentMarksheetBtn">Load Marksheet</button>
+            <button class="btn btn-secondary" id="downloadStudentMarksheetBtn">Download PDF</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div id="studentMarksheetSummary" class="stats-grid narrow"></div>
+        </div>
+
+        <div class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Subject</th><th>Obtained</th><th>Full Mark</th><th>Pass Mark</th>
+                </tr>
+              </thead>
+              <tbody id="studentMarksheetBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Class Result Sheet</h3>
+            <span class="panel-subtitle">Generate a rank list for one class and exam.</span>
+          </div>
+          <div class="filter-row">
+            <select id="classResultClassSelect"><option value="">Select class</option></select>
+            <select id="classResultExamSelect"><option value="">Select exam</option></select>
+            <button class="btn btn-primary" id="loadClassResultBtn">Load Sheet</button>
+            <button class="btn btn-secondary" id="downloadClassResultBtn">Download PDF</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Rank</th><th>Student</th><th>Percentage</th><th>Grade</th><th>GPA</th>
+                </tr>
+              </thead>
+              <tbody id="classResultBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="noticesSection" class="content-section">
+        <div class="section-head">
+          <h2>Notices</h2>
+          <p class="muted">Create school notices and send them to specific roles or classes.</p>
+        </div>
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Create Notice</h3>
+            <span class="panel-subtitle">Publishes a notice and creates matching notifications.</span>
+          </div>
+          <form id="noticeForm" class="form-grid">
+            <label>Title <input type="text" id="noticeTitle" required></label>
+            <label class="full-width">Message <textarea id="noticeMessage" rows="4" required></textarea></label>
+            <label>Audience Role
+              <select id="noticeAudienceRole">
+                <option value="all">All</option>
+                <option value="student">Student</option>
+                <option value="teacher">Teacher</option>
+                <option value="parent">Parent</option>
+              </select>
+            </label>
+            <label>Class <select id="noticeClassName"><option value="">All Classes</option></select></label>
+            <label>Section
+              <select id="noticeSection">
+                <option value="">All Sections</option>
+                <option value="A">Section A</option>
+                <option value="B">Section B</option>
+              </select>
+            </label>
+            <label>Pinned <input type="checkbox" id="noticePinned"></label>
+            <label>Published <input type="checkbox" id="noticePublished" checked></label>
+            <div class="form-actions"><button type="submit" class="btn btn-primary">Save Notice</button></div>
+          </form>
+        </div>
+        <div class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Title</th><th>Audience</th><th>Class</th><th>Section</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody id="noticeTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="feesSection" class="content-section">
+        <div class="section-head">
+          <h2>Fees</h2>
+          <p class="muted">Create fee records for one student or a whole class.</p>
+        </div>
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Create Fee</h3>
+            <span class="panel-subtitle">Use either Student ID or Class Name.</span>
+          </div>
+          <form id="feeForm" class="form-grid">
+            <label>Student ID <input type="text" id="feeStudentId" placeholder="Optional"></label>
+            <label>Class <select id="feeClassName"><option value="">Select class</option></select></label>
+            <label>Title <input type="text" id="feeTitle" required></label>
+            <label>Amount <input type="number" id="feeAmount" required></label>
+            <label>Due Date <input type="date" id="feeDueDate"></label>
+            <label>Academic Year <input type="text" id="feeAcademicYear" placeholder="2026"></label>
+            <label>Term
+              <select id="feeTerm">
+                <option value="Term 1">Term 1</option>
+                <option value="Term 2">Term 2</option>
+                <option value="Term 3">Term 3</option>
+              </select>
+            </label>
+            <label class="full-width">Notes <textarea id="feeNotes" rows="3"></textarea></label>
+            <div class="form-actions"><button type="submit" class="btn btn-primary">Save Fee</button></div>
+          </form>
+        </div>
+        <div class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Student</th><th>Title</th><th>Amount</th><th>Status</th><th>Due Date</th><th>Actions</th></tr></thead>
+              <tbody id="feeTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="parentsSection" class="content-section">
+        <div class="section-head">
+          <h2>Parents</h2>
+          <p class="muted">Create parent logins and link them to student accounts.</p>
+        </div>
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Create Parent</h3>
+            <span class="panel-subtitle">Children are entered as Student IDs separated by commas.</span>
+          </div>
+          <form id="parentForm" class="form-grid">
+            <label>Full Name <input type="text" id="parentName" required></label>
+            <label>Email <input type="email" id="parentEmail" required></label>
+            <label>Password <input type="password" id="parentPassword" required></label>
+            <label>Parent ID <input type="text" id="parentId" required></label>
+            <label>Phone <input type="text" id="parentPhone"></label>
+            <label class="full-width">Children Student IDs <textarea id="parentChildren" rows="3" placeholder="STU-10001, STU-10002"></textarea></label>
+            <div class="form-actions"><button type="submit" class="btn btn-primary">Save Parent</button></div>
+          </form>
+        </div>
+        <div class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Children</th><th>Actions</th></tr></thead>
+              <tbody id="parentTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="auditSection" class="content-section">
+        <div class="section-head">
+          <h2>Audit</h2>
+          <p class="muted">Recent admin actions and data changes.</p>
+        </div>
+        <div class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Time</th><th>Actor</th><th>Action</th><th>Entity</th><th>Summary</th></tr></thead>
+              <tbody id="auditTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="timetableSection" class="content-section">
+        <div class="section-head">
+          <h2>Timetable</h2>
+          <p class="muted">Create the weekly schedule and read it from teacher and student dashboards.</p>
+        </div>
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Add Schedule Row</h3>
+            <span class="panel-subtitle">Each period is stored in MongoDB.</span>
+          </div>
+          <form id="timetableForm" class="form-grid">
+            <label>Class <select id="timetableClassName" required><option value="">Select class</option></select></label>
+            <label>Section
+              <select id="timetableSection">
+                <option value="">Any</option>
+                <option value="A">Section A</option>
+                <option value="B">Section B</option>
+              </select>
+            </label>
+            <label>Academic Year <input type="text" id="timetableAcademicYear" placeholder="2026"></label>
+            <label>Term
+              <select id="timetableTerm">
+                <option value="Term 1">Term 1</option>
+                <option value="Term 2">Term 2</option>
+                <option value="Term 3">Term 3</option>
+              </select>
+            </label>
+            <label>Day <input type="text" id="timetableDay" placeholder="Monday" required></label>
+            <label>Period <input type="text" id="timetablePeriod" placeholder="Period 1" required></label>
+            <label>Subject <input type="text" id="timetableSubject" required></label>
+            <label>Teacher Name <input type="text" id="timetableTeacherName"></label>
+            <div class="form-actions"><button type="submit" class="btn btn-primary">Save Row</button></div>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="filter-row">
+            <select id="timetableClassFilter"><option value="">All Classes</option></select>
+            <select id="timetableSectionFilter">
+              <option value="">All Sections</option>
+              <option value="A">Section A</option>
+              <option value="B">Section B</option>
+            </select>
+            <input type="text" id="timetableYearFilter" placeholder="Academic Year">
+            <select id="timetableTermFilter">
+              <option value="">All Terms</option>
+              <option value="Term 1">Term 1</option>
+              <option value="Term 2">Term 2</option>
+              <option value="Term 3">Term 3</option>
+            </select>
+            <button class="btn btn-secondary" id="loadTimetableBtn">Load Timetable</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Class</th><th>Section</th><th>Year</th><th>Term</th><th>Day</th><th>Period</th><th>Subject</th><th>Teacher</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="timetableTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="analyticsSection" class="content-section">
+        <div class="section-head">
+          <h2>Analytics</h2>
+          <p class="muted">Quick visual trends built from the live attendance collection.</p>
+        </div>
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Monthly Trend</h3>
+            <span class="panel-subtitle">Present vs absent over the last months.</span>
+          </div>
+          <div id="monthlyTrendChart" class="bar-chart"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Class Summary</h3>
+            <span class="panel-subtitle">Attendance totals by class.</span>
+          </div>
+          <div id="classSummaryChart" class="bar-chart"></div>
+        </div>
+      </section>
+
+      <section id="securitySection" class="content-section">
+        <div class="section-head">
+          <h2>Security</h2>
+          <p class="muted">Change your password or generate a reset token for recovery.</p>
+        </div>
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Change Password</h3>
+          </div>
+          <form id="changePasswordForm" class="form-grid">
+            <label>Current Password <input type="password" id="currentPassword" required></label>
+            <label>New Password <input type="password" id="newPassword" required></label>
+            <div class="form-actions"><button type="submit" class="btn btn-primary">Update Password</button></div>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Password Reset Token</h3>
+          </div>
+          <form id="resetTokenForm" class="form-grid">
+            <label>Email <input type="email" id="resetEmail" required></label>
+            <div class="form-actions">
+              <button type="button" class="btn btn-secondary" id="requestResetBtn">Generate Reset Token</button>
+            </div>
+            <label>Reset Token <input type="text" id="resetToken"></label>
+            <label>New Password <input type="password" id="resetNewPassword"></label>
+            <div class="form-actions">
+              <button type="button" class="btn btn-primary" id="confirmResetBtn">Confirm Reset</button>
+            </div>
+          </form>
+          <p class="muted helper-text">In production, the reset token would be emailed to the user.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <datalist id="classCatalog"></datalist>
+
+  <div id="studentEditModal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" type="button" data-close-modal>&times;</button>
+      <h3>Edit Student</h3>
+      <form id="editStudentForm" class="stack-form">
+        <input type="hidden" id="editStudentId">
+        <label>Name <input type="text" id="editStudentName" required></label>
+        <label>Email <input type="email" id="editStudentEmail" required></label>
+        <label>Class <select id="editStudentClass" required></select></label>
+        <label>Section
+          <select id="editStudentSection" required>
+            <option value="A">Section A</option>
+            <option value="B">Section B</option>
+          </select>
+        </label>
+        <label>Academic Year <input type="text" id="editStudentAcademicYear"></label>
+        <label>Grade Level <input type="text" id="editStudentGradeLevel"></label>
+        <label>New Password <input type="password" id="editStudentPassword"></label>
+        <button class="btn btn-primary" type="submit">Save Changes</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="teacherEditModal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" type="button" data-close-modal>&times;</button>
+      <h3>Edit Teacher</h3>
+      <form id="editTeacherForm" class="stack-form">
+        <input type="hidden" id="editTeacherId">
+        <label>Name <input type="text" id="editTeacherName" required></label>
+        <label>Email <input type="email" id="editTeacherEmail" required></label>
+        <label>Subject <input type="text" id="editTeacherSubject" required></label>
+        <label>Academic Year <input type="text" id="editTeacherAcademicYear"></label>
+        <label>New Password <input type="password" id="editTeacherPassword"></label>
+        <label>Classes JSON <textarea id="editTeacherClasses" rows="5" placeholder='[{"name":"Class A","subject":"Math"}]'></textarea></label>
+        <button class="btn btn-primary" type="submit">Save Changes</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="attendanceEditModal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" type="button" data-close-modal>&times;</button>
+      <h3>Edit Attendance</h3>
+      <form id="editAttendanceForm" class="stack-form">
+        <input type="hidden" id="editAttendanceId">
+        <label>Status
+          <select id="editAttendanceStatus">
+            <option value="Present">Present</option>
+            <option value="Absent">Absent</option>
+          </select>
+        </label>
+        <label>Date <input type="date" id="editAttendanceDate"></label>
+        <label>Academic Year <input type="text" id="editAttendanceAcademicYear"></label>
+        <label>Term
+          <select id="editAttendanceTerm">
+            <option value="Term 1">Term 1</option>
+            <option value="Term 2">Term 2</option>
+            <option value="Term 3">Term 3</option>
+          </select>
+        </label>
+        <button class="btn btn-primary" type="submit">Save Changes</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="timetableEditModal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" type="button" data-close-modal>&times;</button>
+      <h3>Edit Timetable Row</h3>
+      <form id="editTimetableForm" class="stack-form">
+        <input type="hidden" id="editTimetableId">
+        <label>Day <input type="text" id="editTimetableDay" required></label>
+        <label>Period <input type="text" id="editTimetablePeriod" required></label>
+        <label>Subject <input type="text" id="editTimetableSubject" required></label>
+        <label>Teacher Name <input type="text" id="editTimetableTeacherName"></label>
+        <label>Academic Year <input type="text" id="editTimetableAcademicYear"></label>
+        <label>Term
+          <select id="editTimetableTerm">
+            <option value="Term 1">Term 1</option>
+            <option value="Term 2">Term 2</option>
+            <option value="Term 3">Term 3</option>
+          </select>
+        </label>
+        <button class="btn btn-primary" type="submit">Save Changes</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

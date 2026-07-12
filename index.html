@@ -1,0 +1,399 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart School Management System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage" class="page active">
+        <div class="login-container">
+            <div class="login-box">
+                <h1>Smart School Management System</h1>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginRole">Role</label>
+                        <select id="loginRole" required>
+                            <option value="">Select Role</option>
+                            <option value="admin">Administrator</option>
+                            <option value="teacher">Teacher</option>
+                            <option value="student">Student</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+                <p class="register-link">Don't have an account? <a href="#" id="showRegister">Register as Student</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration Page -->
+    <div id="registerPage" class="page">
+        <div class="register-container">
+            <div class="register-box">
+                <h1>Student Registration</h1>
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="regName">Full Name</label>
+                        <input type="text" id="regName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regEmail">Email</label>
+                        <input type="email" id="regEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regPassword">Password</label>
+                        <input type="password" id="regPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regStudentId">Student ID</label>
+                        <input type="text" id="regStudentId" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regClass">Class</label>
+                        <input type="text" id="regClass" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regSection">Section</label>
+                        <select id="regSection" required>
+                            <option value="">Select Section</option>
+                            <option value="A">Section A</option>
+                            <option value="B">Section B</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </form>
+                <p class="register-link">Already have an account? <a href="#" id="showLogin">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="page">
+        <nav class="navbar">
+            <h2>Admin Dashboard</h2>
+            <div class="nav-user">
+                <span id="adminUserName"></span>
+                <button class="btn btn-secondary" id="adminLogout">Logout</button>
+            </div>
+        </nav>
+        <div class="dashboard-container">
+            <div class="sidebar">
+                <ul class="nav-menu">
+                    <li><a href="#" data-section="students">Students</a></li>
+                    <li><a href="#" data-section="teachers">Teachers</a></li>
+                    <li><a href="#" data-section="attendance">Attendance</a></li>
+                    <li><a href="#" data-section="adminStats">Statistics</a></li>
+                </ul>
+            </div>
+            <div class="main-content">
+                <!-- Students Section -->
+                <div id="studentsSection" class="content-section active">
+                    <h2>Student Management</h2>
+                    <button class="btn btn-primary" id="addStudentBtn">Add New Student</button>
+                    <div class="table-container">
+                        <table id="studentsTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Class</th>
+                                    <th>Section</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentsTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Teachers Section -->
+                <div id="teachersSection" class="content-section">
+                    <h2>Teacher Management</h2>
+                    <button class="btn btn-primary" id="addTeacherBtn">Add New Teacher</button>
+                    <div class="table-container">
+                        <table id="teachersTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Subject</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="teachersTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Attendance Section -->
+                <div id="attendanceSection" class="content-section">
+                    <h2>Attendance Management</h2>
+                    <div class="filter-group">
+                        <select id="attendanceClassFilter">
+                            <option value="">All Classes</option>
+                        </select>
+                        <select id="attendanceSectionFilter">
+                            <option value="">All Sections</option>
+                            <option value="A">Section A</option>
+                            <option value="B">Section B</option>
+                        </select>
+                        <input type="date" id="attendanceDateFilter">
+                        <button class="btn btn-primary" id="viewAttendanceBtn">View Attendance</button>
+                    </div>
+                    <div class="table-container">
+                        <table id="attendanceTable">
+                            <thead>
+                                <tr>
+                                    <th>Student ID</th>
+                                    <th>Name</th>
+                                    <th>Class</th>
+                                    <th>Section</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="attendanceTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Statistics Section -->
+                <div id="adminStatsSection" class="content-section">
+                    <h2>Statistics</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3>Total Students</h3>
+                            <p id="totalStudents">0</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Total Teachers</h3>
+                            <p id="totalTeachers">0</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Today's Attendance</h3>
+                            <p id="todayAttendance">0%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Teacher Dashboard -->
+    <div id="teacherDashboard" class="page">
+        <nav class="navbar">
+            <h2>Teacher Dashboard</h2>
+            <div class="nav-user">
+                <span id="teacherUserName"></span>
+                <button class="btn btn-secondary" id="teacherLogout">Logout</button>
+            </div>
+        </nav>
+        <div class="dashboard-container">
+            <div class="sidebar">
+                <ul class="nav-menu">
+                    <li><a href="#" data-section="myClasses">My Classes</a></li>
+                    <li><a href="#" data-section="markAttendance">Mark Attendance</a></li>
+                    <li><a href="#" data-section="viewAttendance">View Attendance</a></li>
+                </ul>
+            </div>
+            <div class="main-content">
+                <!-- My Classes Section -->
+                <div id="myClassesSection" class="content-section active">
+                    <h2>My Classes</h2>
+                    <div id="teacherClassesList"></div>
+                </div>
+
+                <!-- Mark Attendance Section -->
+                <div id="markAttendanceSection" class="content-section">
+                    <h2>Mark Attendance</h2>
+                    <div class="filter-group">
+                        <select id="teacherClassSelect">
+                            <option value="">Select Class</option>
+                        </select>
+                        <input type="date" id="attendanceDate" value="">
+                        <button class="btn btn-primary" id="loadStudentsBtn">Load Students</button>
+                    </div>
+                    <div id="attendanceMarkingArea"></div>
+                </div>
+
+                <!-- View Attendance Section -->
+                <div id="viewAttendanceSection" class="content-section">
+                    <h2>View Attendance</h2>
+                    <div class="filter-group">
+                        <select id="viewClassSelect">
+                            <option value="">Select Class</option>
+                        </select>
+                        <input type="date" id="viewDateSelect">
+                        <button class="btn btn-primary" id="viewAttendanceBtnTeacher">View</button>
+                    </div>
+                    <div class="table-container">
+                        <table id="teacherAttendanceTable">
+                            <thead>
+                                <tr>
+                                    <th>Student ID</th>
+                                    <th>Name</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="teacherAttendanceTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Dashboard -->
+    <div id="studentDashboard" class="page">
+        <nav class="navbar">
+            <h2>Student Dashboard</h2>
+            <div class="nav-user">
+                <span id="studentUserName"></span>
+                <button class="btn btn-secondary" id="studentLogout">Logout</button>
+            </div>
+        </nav>
+        <div class="dashboard-container">
+            <div class="sidebar">
+                <ul class="nav-menu">
+                    <li><a href="#" data-section="myProfile">My Profile</a></li>
+                    <li><a href="#" data-section="myAttendance">My Attendance</a></li>
+                </ul>
+            </div>
+            <div class="main-content">
+                <!-- My Profile Section -->
+                <div id="myProfileSection" class="content-section active">
+                    <h2>My Profile</h2>
+                    <div class="profile-card">
+                        <div class="profile-info">
+                            <p><strong>Student ID:</strong> <span id="profileStudentId"></span></p>
+                            <p><strong>Name:</strong> <span id="profileName"></span></p>
+                            <p><strong>Email:</strong> <span id="profileEmail"></span></p>
+                            <p><strong>Class:</strong> <span id="profileClass"></span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- My Attendance Section -->
+                <div id="myAttendanceSection" class="content-section">
+                    <h2>My Attendance</h2>
+                    <div class="filter-group">
+                        <input type="month" id="studentMonthFilter">
+                        <button class="btn btn-primary" id="viewMyAttendanceBtn">View</button>
+                    </div>
+                    <div class="table-container">
+                        <table id="studentAttendanceTable">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentAttendanceTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="attendance-summary">
+                        <p><strong>Total Present:</strong> <span id="totalPresent">0</span></p>
+                        <p><strong>Total Absent:</strong> <span id="totalAbsent">0</span></p>
+                        <p><strong>Attendance Percentage:</strong> <span id="attendancePercentage">0%</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Add Student Modal -->
+    <div id="addStudentModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add New Student</h2>
+            <form id="addStudentForm">
+                <div class="form-group">
+                    <label for="studentName">Full Name</label>
+                    <input type="text" id="studentName" required>
+                </div>
+                <div class="form-group">
+                    <label for="studentEmail">Email</label>
+                    <input type="email" id="studentEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="studentPassword">Password</label>
+                    <input type="password" id="studentPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="studentId">Student ID</label>
+                    <input type="text" id="studentId" required>
+                </div>
+                <div class="form-group">
+                    <label for="studentClass">Class</label>
+                    <input type="text" id="studentClass" required>
+                </div>
+                <div class="form-group">
+                    <label for="studentSection">Section</label>
+                    <select id="studentSection" required>
+                        <option value="">Select Section</option>
+                        <option value="A">Section A</option>
+                        <option value="B">Section B</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Student</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Teacher Modal -->
+    <div id="addTeacherModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add New Teacher</h2>
+            <form id="addTeacherForm">
+                <div class="form-group">
+                    <label for="teacherName">Full Name</label>
+                    <input type="text" id="teacherName" required>
+                </div>
+                <div class="form-group">
+                    <label for="teacherEmail">Email</label>
+                    <input type="email" id="teacherEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="teacherPassword">Password</label>
+                    <input type="password" id="teacherPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="teacherId">Teacher ID</label>
+                    <input type="text" id="teacherId" required>
+                </div>
+                <div class="form-group">
+                    <label for="teacherSubject">Subject</label>
+                    <input type="text" id="teacherSubject" required>
+                </div>
+                <div class="form-group">
+                    <label for="teacherClasses">Classes (comma-separated)</label>
+                    <input type="text" id="teacherClasses" placeholder="e.g., Class A, Class B or Class A: WEB DEVELOPMENT, Class B: SOFTWARE DEVELOPMENT">
+                    <small style="color: #666; font-size: 12px;">You can specify different subjects per class using format: ClassName: Subject</small>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Teacher</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

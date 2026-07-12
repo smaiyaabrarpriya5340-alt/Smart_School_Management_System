@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Registration</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="auth-page">
+  <main class="auth-shell">
+    <section class="auth-hero panel">
+      <div class="eyebrow">Student Enrollment</div>
+      <h1>Create a Student Account</h1>
+      <p class="hero-copy">
+        Register a student profile that can log in, view attendance, and access timetable data from the same school system.
+      </p>
+
+      <div class="hero-metrics">
+        <article class="hero-metric">
+          <span>Profile</span>
+          <strong>Name, ID, class, section</strong>
+        </article>
+        <article class="hero-metric">
+          <span>Access</span>
+          <strong>Student dashboard</strong>
+        </article>
+        <article class="hero-metric">
+          <span>Storage</span>
+          <strong>MongoDB Atlas</strong>
+        </article>
+      </div>
+    </section>
+
+    <section class="auth-stack">
+      <section class="panel auth-panel">
+        <div class="section-head compact">
+          <div>
+            <div class="eyebrow">Registration</div>
+            <h2>Enter student details</h2>
+          </div>
+        </div>
+
+        <form id="registerForm" class="stack-form">
+          <label>
+            Full Name
+            <input type="text" id="regName" required>
+          </label>
+          <label>
+            Email
+            <input type="email" id="regEmail" required>
+          </label>
+          <label>
+            Password
+            <input type="password" id="regPassword" required>
+          </label>
+          <label>
+            Student ID
+            <input type="text" id="regStudentId" required>
+          </label>
+          <label>
+            Class
+            <select id="regClass" required>
+              <option value="">Loading classes...</option>
+            </select>
+          </label>
+          <label>
+            Section
+            <select id="regSection" required>
+              <option value="">Select section</option>
+              <option value="A">Section A</option>
+              <option value="B">Section B</option>
+            </select>
+          </label>
+          <button type="submit" class="btn btn-primary">Create Account</button>
+          <a class="auth-link" href="/">Back to Login</a>
+        </form>
+      </section>
+    </section>
+  </main>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/register.js"></script>
+</body>
+</html>

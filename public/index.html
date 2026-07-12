@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart School Management System</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="auth-page">
+  <main class="auth-shell">
+    <section class="auth-hero panel">
+      <h1>Smart School Management System</h1>
+
+    </section>
+
+    <section class="auth-stack">
+      <section class="panel auth-panel">
+        <div class="section-head compact">
+          <div>
+            <div class="eyebrow">Login</div>
+            <h2>Sign in to your dashboard</h2>
+          </div>
+        </div>
+
+        <form id="loginForm" class="stack-form">
+          <label>
+            Email / Student ID
+            <input type="text" id="loginEmail" placeholder="name@example.com or STU-20001" required>
+          </label>
+          <label>
+            Password
+            <input type="password" id="loginPassword" required>
+          </label>
+          <label>
+            Role
+            <select id="loginRole" required>
+              <option value="">Select role</option>
+              <option value="admin">Administrator</option>
+              <option value="teacher">Teacher</option>
+              <option value="student">Student</option>
+              <option value="parent">Parent</option>
+            </select>
+          </label>
+          <button type="submit" class="btn btn-primary">Login</button>
+          <a class="auth-link" href="/register.html">Create a student account</a>
+        </form>
+      </section>
+    </section>
+  </main>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/index.js"></script>
+</body>
+</html>

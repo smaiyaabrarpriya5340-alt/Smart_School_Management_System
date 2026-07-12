@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parent Dashboard</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="dashboard-page">
+  <header class="topbar">
+    <div>
+      <h1>Parent Dashboard</h1>
+      <p class="muted" id="parentUserName"></p>
+    </div>
+    <div class="topbar-actions">
+      <span class="status-pill">Family Overview</span>
+      <button class="btn btn-secondary" id="parentLogout">Logout</button>
+    </div>
+  </header>
+
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <button class="nav-link active" data-section="overview">Overview</button>
+      <button class="nav-link" data-section="attendance">Attendance</button>
+      <button class="nav-link" data-section="results">Results</button>
+      <button class="nav-link" data-section="fees">Fees</button>
+      <button class="nav-link" data-section="notices">Notices</button>
+      <button class="nav-link" data-section="timetable">Timetable</button>
+      <button class="nav-link" data-section="security">Security</button>
+    </aside>
+
+    <main class="main-content">
+      <section class="dashboard-overview">
+        <article class="overview-card">
+          <span>Children</span>
+          <strong id="parentOverviewChildren">0</strong>
+        </article>
+        <article class="overview-card">
+          <span>Notifications</span>
+          <strong id="parentOverviewNotifications">0</strong>
+        </article>
+        <article class="overview-card">
+          <span>Due Fees</span>
+          <strong id="parentOverviewDueFees">0</strong>
+        </article>
+      </section>
+
+      <section id="overviewSection" class="content-section active">
+        <div class="section-head">
+          <h2>Family Overview</h2>
+          <p class="muted">Pick a child and review attendance, results, fees, and timetable.</p>
+        </div>
+        <div class="panel">
+          <div class="filter-row">
+            <select id="parentChildSelect"><option value="">Select child</option></select>
+            <button class="btn btn-primary" id="refreshParentViewBtn">Refresh</button>
+          </div>
+        </div>
+        <div id="parentChildrenList" class="card-grid"></div>
+      </section>
+
+      <section id="attendanceSection" class="content-section">
+        <div class="section-head">
+          <h2>Attendance</h2>
+          <p class="muted">Monthly attendance for the selected child.</p>
+        </div>
+        <div class="panel">
+          <div class="filter-row">
+            <input type="month" id="parentAttendanceMonth">
+            <button class="btn btn-primary" id="loadParentAttendanceBtn">Load</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Date</th><th>Status</th></tr></thead>
+              <tbody id="parentAttendanceBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="resultsSection" class="content-section">
+        <div class="section-head">
+          <h2>Results</h2>
+          <p class="muted">Published report cards for the selected child.</p>
+        </div>
+        <div class="panel">
+          <div class="filter-row">
+            <select id="parentResultExamSelect"><option value="">Select exam</option></select>
+            <button class="btn btn-primary" id="loadParentResultBtn">View Result</button>
+            <button class="btn btn-secondary" id="downloadParentResultBtn">Download PDF</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div id="parentResultSummary" class="stats-grid narrow"></div>
+        </div>
+        <div class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Subject</th><th>Obtained</th><th>Full Mark</th></tr></thead>
+              <tbody id="parentResultBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="feesSection" class="content-section">
+        <div class="section-head">
+          <h2>Fees</h2>
+          <p class="muted">Fee records and payment status for the selected child.</p>
+        </div>
+        <div class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Title</th><th>Amount</th><th>Status</th><th>Due Date</th></tr></thead>
+              <tbody id="parentFeesBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="noticesSection" class="content-section">
+        <div class="section-head">
+          <h2>Notices</h2>
+          <p class="muted">School notices and alerts.</p>
+        </div>
+        <div class="panel">
+          <div id="parentNotifications" class="stack-list"></div>
+        </div>
+        <div class="panel">
+          <div id="parentNotices" class="stack-list"></div>
+        </div>
+      </section>
+
+      <section id="timetableSection" class="content-section">
+        <div class="section-head">
+          <h2>Timetable</h2>
+          <p class="muted">Weekly schedule for the selected child.</p>
+        </div>
+        <div class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Day</th><th>Period</th><th>Subject</th><th>Teacher</th></tr></thead>
+              <tbody id="parentTimetableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="securitySection" class="content-section">
+        <div class="section-head">
+          <h2>Security</h2>
+          <p class="muted">Change your password directly from the parent dashboard.</p>
+        </div>
+        <div class="panel">
+          <form id="parentChangePasswordForm" class="form-grid">
+            <label>Current Password <input type="password" id="parentCurrentPassword" required></label>
+            <label>New Password <input type="password" id="parentNewPassword" required></label>
+            <div class="form-actions"><button type="submit" class="btn btn-primary">Update Password</button></div>
+          </form>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/parent.js"></script>
+</body>
+</html>
